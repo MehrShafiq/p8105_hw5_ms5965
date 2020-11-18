@@ -5,6 +5,7 @@ output: github_document
 
 ```{r setup, include = FALSE}
 library(tidyverse)
+library(ggplot2)
 
 knitr::opts_chunk$set(
 	fig.width = 6, 
@@ -30,7 +31,7 @@ Reading in the data.
 
 ```{r}
 homicide_df = 
-  read_csv("data/homicide-data.csv") %>% 
+  read_csv("homocide_data/homicide-data.csv") %>% 
   mutate(
     city_state = str_c(city, state, sep = "_"),
     resolved = case_when(
@@ -85,4 +86,67 @@ results_df %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
+
+## Problem 2
+
+```{r}
+path_df = 
+  tibble(
+    path = list.files("study_data"),
+  ) %>% 
+  mutate(
+    path = str_c("study_data/", path)) 
+
+df = map_dfr(path_df$path, read_csv)
+
+read_csv(path_df$path)
+```
+
+
+```{r}
+data_dir = "study_data" %>% 
+  fs::dir_ls() %>% 
+  map_dfr(read_csv, .id = "file.ID")
+ 
+clean_df = 
+  data_dir %>% 
+   separate(
+    file.ID,
+    into = c(NA, "arm_id"),
+    sep = "/") %>% 
+  separate(
+    arm_id,
+    into = c("arm_id", NA),
+    sep = "\\.") %>% 
+  separate(
+    arm_id,
+    into = c("arm", "id"),
+    sep = "_") %>% 
+  
+  pivot_longer(
+    week_1:week_8,
+    names_to = "week",
+    values_to = "observations",
+    names_prefix = "week_"
+  ) %>% 
+  mutate(week = as.numeric(week))
+```
+
+
+```{r, plot}
+plot = 
+  clean_df %>% 
+  ggplot(aes(x = week, y = observations, group = arm, color = arm)) +
+  geom_line() + 
+  stat_smooth(aes(group = 1), geom = "point", fun.y = mean, shape = 10, size = 1) + 
+  facet_grid(. ~ arm) 
+
+plot
+```
+
+The experiment group shows an increasing trend while the control group stays more stable over time. 
+
+
+  
+  
 
