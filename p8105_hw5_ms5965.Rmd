@@ -189,6 +189,7 @@ sim_plot_data =
 
 ```
 
+### First plot
 
 ```{r}
 plot_A = 
@@ -211,5 +212,25 @@ plot_A =
   ) 
 
 plot_A
+
 ```
+
+As the effect size increases, the proportion of rejects increases (power increases) - it plateaus at effect sizes of 4, 5 & 6. 
+
+### Second Plot
+
+```{r}
+plot_B = 
+  sim_plot_data %>% 
+  group_by(mean_list) %>% 
   
+  
+  ggplot(aes(x = mean_list, y = estimate)) +
+        geom_line() + 
+  stat_smooth(aes(group = 1), geom = "point", fun.y = mean, shape = 2, size = 1)
+
+plot_B
+
+```
+
+
