@@ -223,14 +223,37 @@ As the effect size increases, the proportion of rejects increases (power increas
 plot_B = 
   sim_plot_data %>% 
   group_by(mean_list) %>% 
-  
-  
-  ggplot(aes(x = mean_list, y = estimate)) +
-        geom_line() + 
-  stat_smooth(aes(group = 1), geom = "point", fun.y = mean, shape = 2, size = 1)
+  summarize(
+    avg_mu = mean(estimate)
+  ) %>% 
+  ggplot(aes(x = mean_list, y = avg_mu)) +
+  geom_point() + 
+  geom_line() +
+  labs(
+    y = "Average Estimates", 
+    x = "Effect Size"
+  )
+```
 
-plot_B
+
+```{r}
+plot_C = 
+  sim_plot_data %>% 
+  filter(p.value <= 0.05) %>% 
+  group_by(mean_list) %>% 
+  summarize(
+    avg_mu = mean(estimate)
+  ) %>% 
+  ggplot(aes(x = mean_list, y = avg_mu)) +
+  geom_point() + 
+  geom_line() +
+  labs(
+    title = "Samples for which the null was rejected",
+    y = "Average Estimates", 
+    x = "Effect Size"
+  ) 
 
 ```
 
+The sample average of μ^ across tests for which the null is rejected approximately equal to the true value of μ for mu values of 3 or greater. For smaller values there's a difference. 
 
