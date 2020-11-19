@@ -89,7 +89,7 @@ results_df %>%
 
 ## Problem 2
 
-```{r}
+```{r, include = FALSE}
 path_df = 
   tibble(
     path = list.files("study_data"),
@@ -233,6 +233,8 @@ plot_B =
     y = "Average Estimates", 
     x = "Effect Size"
   )
+
+plot_B
 ```
 
 
@@ -253,7 +255,8 @@ plot_C =
     x = "Effect Size"
   ) 
 
+plot_C
 ```
 
-The sample average of μ^ across tests for which the null is rejected approximately equal to the true value of μ for mu values of 3 or greater. For smaller values there's a difference. 
+The sample average of μ^ across tests for which the null is rejected approximately equal to the true value of μ for mu values of 3 or greater. For smaller values there's a difference; the average is double for samples for which the null was rejected. 
 
